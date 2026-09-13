@@ -33,7 +33,7 @@ The Phase 0 local fixture also includes a private `id` solely so `source.detail(
 
 Universal Phase 0 IDs are `app-shell`, `page-title`, `demo-title`, `working-indicator`, `main-action`, `empty-action`, `error-action`, `clear-action`, `status-message`, `error-message`, `empty-message`, `results-section`, `results-title`, and `results-list`.
 
-Phase 1 may add IDs for its region, date, filter, comparison, and shared-detail controls, but existing IDs are not renamed or repurposed.
+Phase 1 adds `region-controls`, `date-controls`, `filter-controls`, `location-filter`, `budget-filter`, `budget-currency`, `clear-filters`, `comparison-title`, `comparison-list`, `compare-count`, `clear-comparison`, `detail-panel`, `detail-title`, `detail-content`, `close-detail`. Existing IDs remain unchanged and retain their Phase 0 roles.
 
 ## UI module
 
@@ -57,6 +57,8 @@ renderDetail(detail)
 clearDetail()
 ```
 
+`renderControls(viewModel)` receives selected region/date, seven date options, derived locations, selected filters, currency, and region label. `renderList(items)` may receive an `isCompared` display flag added by `app.js`; normalized source records are not mutated. `renderDetail(detail)` accepts a loading, result, or readable-error view model and always updates the one shared detail panel.
+
 ## Source module
 
 `source.js` exports one object named `source` with four async methods:
@@ -69,6 +71,10 @@ source.list()
 ```
 
 `source.save(record)` always throws a readable “not used in this project” error. `source.list()` always returns `[]`.
+
+## Phase 1 pure helper
+
+`finder.js` contains only deterministic calendar, filtering, location, and comparison helpers. It has no DOM or data access. The sample fixture is anchored to `sampleBaseDate`; `source.js` shifts its dates into the current seven-day `Asia/Shanghai` window before returning the unchanged normalized listing shape.
 
 ## Supported values
 

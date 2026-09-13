@@ -1,8 +1,8 @@
 # Musicals This Week
 
-Musicals This Week will help audiences compare performances across Broadway, the West End, and Germany for the coming seven days. The current code is **Phase 0 only**: a stable static foundation with local fictional data and generic controls that prove the application states and architecture.
+Musicals This Week helps audiences compare fictional sample performances across Broadway, the West End, and Germany for the coming seven Beijing-calendar days. The current code is **Phase 1**: the complete product interaction runs on local fictional data while preserving the Phase 0 architecture and regression controls.
 
-It deliberately does not yet include musical-finder controls, live retrieval, Firecrawl, a backend, ticket inventory, purchasing, maps, accounts, saved comparisons, currency conversion, or notifications.
+It includes region/date selection, location and budget filters, missing-value states, an in-memory three-card comparison, and one shared sample detail panel. It deliberately does not include live retrieval, Firecrawl, a backend, ticket inventory, purchasing, maps, accounts, saved comparisons, currency conversion, or notifications.
 
 ## Run locally
 
@@ -14,7 +14,7 @@ python -m http.server 4173
 
 Then visit `http://localhost:4173`.
 
-No dependency installation or environment file is required in Phase 0.
+No dependency installation or environment file is required in Phase 1.
 
 ## Deploy
 
@@ -42,6 +42,7 @@ The intended public path is GitHub to Vercel as a plain static site. Connect the
 - `ui.js` owns every DOM read, event binding, and visible update.
 - `source.js` is the only browser-side data-entry seam.
 - `config.js` contains safe browser settings.
+- `finder.js` contains pure date, filter, location, and comparison helpers.
 - `data/sample.json` is the fictional local fixture used in Phases 0 and 1.
 
 Phase 2 will change the inside of `source.js` to use approved same-origin server routes while its public method names remain stable.

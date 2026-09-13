@@ -1,54 +1,66 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="A foundation preview for Musicals This Week.">
-    <title>Musicals This Week — Foundation</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
-    <main id="app-shell" class="shell" aria-labelledby="page-title">
-      <header class="masthead">
-        <p class="eyebrow">Phase 0 · Foundation preview</p>
-        <h1 id="page-title">Musicals This Week</h1>
-        <p class="lede">A stable starting point for the musical finder.</p>
-      </header>
-
-      <section class="panel" aria-labelledby="demo-title">
-        <div class="panel-heading">
-          <div>
-            <p class="section-label">Foundation states</p>
-            <h2 id="demo-title">Test the data and interface seams</h2>
-          </div>
-          <span id="working-indicator" class="working" role="status" hidden>Working…</span>
-        </div>
-
-        <p class="instruction">
-          These generic controls prove that loading, empty, error, result, status, and clear states work before product features are added.
-        </p>
-
-        <div class="actions" aria-label="Foundation test actions">
-          <button id="main-action" data-action type="button">Load sample</button>
-          <button id="empty-action" data-action class="secondary" type="button">Show empty state</button>
-          <button id="error-action" data-action class="secondary" type="button">Show error state</button>
-          <button id="clear-action" data-action class="quiet" type="button">Clear results</button>
-        </div>
-
-        <p id="status-message" class="message status" role="status" aria-live="polite"></p>
-        <p id="error-message" class="message error" role="alert" hidden></p>
-        <p id="empty-message" class="message empty" role="status" hidden></p>
-
-        <section id="results-section" class="results" aria-labelledby="results-title">
-          <div class="results-heading">
-            <h2 id="results-title">Sample results</h2>
-            <span class="phase-tag">Local JSON only</span>
-          </div>
-          <div id="results-list" class="result-list"></div>
-        </section>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Compare fictional sample musical performances across Broadway, the West End, and Germany.">
+  <title>Musicals This Week</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%237b1f2b'/%3E%3Cpath d='M13 15h38v34H13z' fill='%23fff6df' stroke='%23d7ae5d' stroke-width='3'/%3E%3Cpath d='M22 40V24l10 10 10-10v16' fill='none' stroke='%237b1f2b' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="app-shell" class="shell" aria-labelledby="page-title">
+    <header class="masthead">
+      <div><p class="eyebrow">The weekly playbill</p><h1 id="page-title">Musicals This Week</h1></div>
+      <div class="masthead-copy">
+        <p class="lede">Seven days of Broadway, West End, and German musical performances</p>
+        <p class="disclaimer">Prices and availability can change. Confirm current details on the linked ticket page.</p>
+        <p class="sample-notice">Phase 1 uses fictional local sample data. No live ticket information is shown.</p>
+      </div>
+    </header>
+    <section class="finder-panel" aria-labelledby="demo-title">
+      <div class="panel-heading"><div><p class="section-label">Plan a theatre day</p><h2 id="demo-title">Choose a stage and a date</h2></div><span id="working-indicator" class="working" role="status" hidden>Working…</span></div>
+      <div id="region-controls" class="region-controls" aria-label="Musical region">
+        <button type="button" data-region="broadway" aria-pressed="true">Broadway <span>New York</span></button>
+        <button type="button" data-region="west-end" aria-pressed="false">West End <span>London</span></button>
+        <button type="button" data-region="germany" aria-pressed="false">Germany <span>Major cities</span></button>
+      </div>
+      <div id="date-controls" class="date-controls" aria-label="Next seven Beijing-calendar dates"></div>
+      <div id="filter-controls" class="filters" aria-label="Filter performances">
+        <label><span>Location</span><select id="location-filter"><option value="">All locations</option></select></label>
+        <label><span>Maximum budget <strong id="budget-currency">USD</strong></span><input id="budget-filter" type="number" min="0" step="1" inputmode="decimal" placeholder="Any price"></label>
+        <button id="clear-filters" class="quiet" type="button">Clear filters</button>
+      </div>
+      <p id="status-message" class="message status" role="status" aria-live="polite"></p>
+      <p id="error-message" class="message error" role="alert" hidden></p>
+      <p id="empty-message" class="message empty" role="status" hidden></p>
+    </section>
+    <div class="content-grid">
+      <section id="results-section" class="results panel" aria-labelledby="results-title">
+        <div class="results-heading"><div><p class="section-label">Today's options</p><h2 id="results-title">Sample performances</h2></div><span class="phase-tag">Fictional data</span></div>
+        <div id="results-list" class="result-list"></div>
       </section>
-    </main>
-
-    <script type="module" src="app.js"></script>
-  </body>
+      <aside class="compare-panel panel" aria-labelledby="comparison-title">
+        <div class="results-heading"><div><p class="section-label">Shortlist</p><h2 id="comparison-title">Compare up to three</h2></div><span id="compare-count" class="counter">0 / 3</span></div>
+        <div id="comparison-list" class="comparison-list"><p class="placeholder">Add performances to line up their time, place, price, and status.</p></div>
+        <button id="clear-comparison" class="quiet full-width" type="button">Clear comparison</button>
+      </aside>
+    </div>
+    <section id="detail-panel" class="detail-panel panel" aria-labelledby="detail-title" hidden>
+      <div class="results-heading"><div><p class="section-label">One closer look</p><h2 id="detail-title">Performance details</h2></div><button id="close-detail" class="quiet compact" type="button">Close</button></div>
+      <div id="detail-content"></div>
+    </section>
+    <details class="diagnostics">
+      <summary>Phase 0 regression states</summary>
+      <p class="instruction">These controls preserve the accepted loading, empty, error, result, status, and clear checks.</p>
+      <div class="actions" aria-label="Foundation test actions">
+        <button id="main-action" data-action type="button">Load sample</button>
+        <button id="empty-action" data-action class="secondary" type="button">Show empty state</button>
+        <button id="error-action" data-action class="secondary" type="button">Show error state</button>
+        <button id="clear-action" data-action class="quiet" type="button">Clear results</button>
+      </div>
+    </details>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
 </html>

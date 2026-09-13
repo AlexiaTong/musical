@@ -1,4 +1,4 @@
-# Phase 0 Regression Checks
+# Phase 1 Regression Checks
 
 Run every numbered check before a checkpoint. Record each as pass, fail, or blocked; never delete or weaken an earlier check.
 
@@ -16,24 +16,44 @@ Run every numbered check before a checkpoint. Record each as pass, fail, or bloc
 12. **UI boundary:** confirm `ui.js` owns all DOM queries, event binding, and visible DOM updates.
 13. **Detail seam:** in a module-capable browser console, confirm `source.detail("foundation-curtain-call")` resolves to the deeper sample record.
 14. **Persistence exclusions:** confirm `source.list()` resolves to `[]` and `source.save({})` rejects with a readable “not used in this project” error.
-15. **Scope:** confirm there are no packages, API routes, secrets, live sources, scraping code, or product filters/comparison controls.
+15. **Phase boundary:** confirm there are no packages, API routes, secrets, live sources, or scraping code; the only additions beyond Phase 0 are the approved Phase 1 product controls and pure helper.
+16. **Regions:** switch among Broadway, West End, and Germany; confirm the selected state and listings update.
+17. **Seven dates:** confirm seven dates begin on the current `Asia/Shanghai` day and cross month/year boundaries correctly.
+18. **Context reset:** add a comparison item and open a detail, then change region or date; confirm both clear.
+19. **Location filter:** confirm choices derive from the current loaded city/theatre values and filtering does not reload the fixture.
+20. **Budget filter:** set a maximum budget; confirm known prices filter numerically in the region currency and unknown prices are excluded with an explanation.
+21. **Clear filters:** confirm the current region/date sample set returns without a new source request.
+22. **Comparison:** compare one, two, and three cards; confirm a fourth is rejected readably and removals work.
+23. **Shared detail:** open two details in sequence; confirm the second replaces the first in the one shared panel and no private `id` is rendered.
+24. **Missing fields:** confirm missing time, price, status, or booking values use readable unavailable labels and are never inferred.
+25. **Responsive and keyboard:** confirm the product remains usable without horizontal scrolling at 375px and all controls have visible keyboard focus.
 
 ## Latest run
 
 Run on 2026-09-13 against `http://127.0.0.1:4173`:
 
 1. PASS — page loaded and the browser console reported no errors.
-2. PASS — the main action rendered two sample cards.
-3. PASS — the empty state displayed its readable message.
+2. PASS — the preserved main action rendered two foundation sample cards.
+3. PASS — the preserved successful empty state displayed its readable message.
 4. PASS — the controlled error displayed without a stack trace.
-5. PASS — the working indicator appeared, buttons disabled, and both recovered.
-6. PASS — status text changed and cleared.
-7. PASS — results and transient messages cleared.
-8. PASS — at 375px, body text remained 16px, buttons were 44px high, and no horizontal overflow appeared.
-9. PASS — the credential-pattern scan found no secret-like values.
-10. PASS — the `app.js` prohibited-pattern scan found no fetch, DOM, URL, or markup access.
+5. PASS — the working indicator appeared, controls disabled, and both recovered.
+6. PASS — status text changed after actions and cleared.
+7. PASS — clear results removed cards and transient messages.
+8. PASS — at 375px, body text was 16px, visible buttons were at least 44px high, and horizontal overflow was false.
+9. PASS — the tracked-runtime credential-pattern scan found no secret-like values.
+10. PASS — `app.js` contains no fetch, DOM, source URL, or rendering markup access.
 11. PASS — the runtime data-access scan found `fetch` only in `source.js`.
-12. PASS — the DOM-access scan found DOM work only in `ui.js`.
-13. PASS — `source.detail("foundation-curtain-call")` returned the deeper sample record.
+12. PASS — the DOM-access scan found visible DOM work only in `ui.js`.
+13. PASS — `source.detail("foundation-curtain-call")` returned `Curtain Call`.
 14. PASS — `source.list()` returned `[]`; `source.save({})` returned the required readable error.
-15. PASS — the runtime scope scan found no packages, API routes, scraping, live sources, or product controls.
+15. PASS — there are no packages, API/server routes, secrets, live sources, or scraping code; additions are limited to approved Phase 1 files.
+16. PASS — all three region controls loaded four region-specific day-one samples and updated currency/selection.
+17. PASS — seven Beijing-calendar dates rendered; the 2026-12-29 test rolled correctly through 2027-01-04.
+18. PASS — changing region cleared a three-item comparison and hid the open detail panel.
+19. PASS — Germany location choices came only from loaded cities/theatres; Hamburg filtered to two cards locally.
+20. PASS — an 80 USD budget showed two of four Broadway cards and explained that one unknown-price item was excluded.
+21. PASS — clear filters restored all four current-context cards without a source request.
+22. PASS — one, two, and three comparison cards rendered; a fourth produced the readable limit message.
+23. PASS — opening `Midnight Matinee` then `Harbor Lights` replaced the one shared detail result; the private lookup ID was omitted.
+24. PASS — intentionally missing time, price, status, facts, and booking values rendered readable unavailable states.
+25. PASS — keyboard focus styles are present; the 375px browser check had 16px body text, 44px visible buttons, and no horizontal overflow.

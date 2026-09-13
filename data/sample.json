@@ -1,68 +1,55 @@
 {
-  "region": "broadway",
-  "selectedDate": "2026-09-13",
-  "dataDay": "2026-09-13",
+  "sampleBaseDate": "2026-09-13",
   "fetchedAt": "2026-09-13T02:15:00.000Z",
-  "source": {
-    "name": "Local foundation sample",
-    "url": ""
+  "sources": {
+    "broadway": { "name": "Fictional Broadway sample", "url": "https://example.com/broadway" },
+    "west-end": { "name": "Fictional West End sample", "url": "https://example.com/west-end" },
+    "germany": { "name": "Fictional Germany sample", "url": "https://example.com/germany" }
+  },
+  "foundation": {
+    "region": "broadway", "selectedDate": "2026-09-13", "dataDay": "2026-09-13", "fetchedAt": "2026-09-13T02:15:00.000Z",
+    "source": { "name": "Local foundation sample", "url": "" },
+    "listings": [
+      { "id": "foundation-curtain-call", "region": "broadway", "title": "Curtain Call", "theatre": "Sample Theatre", "city": "New York", "performanceDate": "2026-09-13", "performanceTimes": ["19:30"], "lowestPrice": null, "ticketStatus": "unknown", "detailUrl": "", "bookingUrl": "", "sourceName": "Local foundation sample", "sourceUrl": "", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": ["lowestPrice", "detailUrl", "bookingUrl"] },
+      { "id": "foundation-overture", "region": "broadway", "title": "The Overture", "theatre": "Demo Playhouse", "city": "New York", "performanceDate": "2026-09-13", "performanceTimes": ["14:00", "20:00"], "lowestPrice": { "amount": 50, "currency": "USD", "display": "Sample price $50" }, "ticketStatus": "on-sale", "detailUrl": "", "bookingUrl": "", "sourceName": "Local foundation sample", "sourceUrl": "", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": ["detailUrl", "bookingUrl"] }
+    ],
+    "warnings": ["This is fictional local data for foundation testing only."],
+    "details": [
+      { "id": "foundation-curtain-call", "title": "Curtain Call", "region": "broadway", "theatre": "Sample Theatre", "city": "New York", "performanceFacts": ["One fictional performance is listed at 19:30."], "ticketFacts": [], "excerpt": "A fictional detail record used only to prove the permanent source.detail(id) seam.", "sourceName": "Local foundation sample", "sourceUrl": "", "bookingUrl": "", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": ["ticketFacts", "sourceUrl", "bookingUrl"] }
+    ]
   },
   "listings": [
-    {
-      "id": "foundation-curtain-call",
-      "region": "broadway",
-      "title": "Curtain Call",
-      "theatre": "Sample Theatre",
-      "city": "New York",
-      "performanceDate": "2026-09-13",
-      "performanceTimes": ["19:30"],
-      "lowestPrice": null,
-      "ticketStatus": "unknown",
-      "detailUrl": "",
-      "bookingUrl": "",
-      "sourceName": "Local foundation sample",
-      "sourceUrl": "",
-      "retrievedAt": "2026-09-13T02:15:00.000Z",
-      "missingFields": ["lowestPrice", "detailUrl", "bookingUrl"]
-    },
-    {
-      "id": "foundation-overture",
-      "region": "broadway",
-      "title": "The Overture",
-      "theatre": "Demo Playhouse",
-      "city": "New York",
-      "performanceDate": "2026-09-13",
-      "performanceTimes": ["14:00", "20:00"],
-      "lowestPrice": {
-        "amount": 50,
-        "currency": "USD",
-        "display": "Sample price $50"
-      },
-      "ticketStatus": "on-sale",
-      "detailUrl": "",
-      "bookingUrl": "",
-      "sourceName": "Local foundation sample",
-      "sourceUrl": "",
-      "retrievedAt": "2026-09-13T02:15:00.000Z",
-      "missingFields": ["detailUrl", "bookingUrl"]
-    }
+    { "id": "bway-midnight-matinee", "region": "broadway", "title": "Midnight Matinee", "theatre": "Majestic Lane Theatre", "city": "New York", "performanceDate": "2026-09-13", "performanceTimes": ["14:00", "19:30"], "lowestPrice": { "amount": 58, "currency": "USD", "display": "Sample tickets from $58" }, "ticketStatus": "on-sale", "detailUrl": "https://example.com/broadway/midnight-matinee", "bookingUrl": "https://example.com/broadway/midnight-matinee/tickets", "sourceName": "Fictional Broadway sample", "sourceUrl": "https://example.com/broadway", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "bway-harbor-lights", "region": "broadway", "title": "Harbor Lights", "theatre": "Forty-Fourth Street Playhouse", "city": "New York", "performanceDate": "2026-09-13", "performanceTimes": ["19:00"], "lowestPrice": { "amount": 76, "currency": "USD", "display": "Sample tickets from $76" }, "ticketStatus": "on-sale", "detailUrl": "https://example.com/broadway/harbor-lights", "bookingUrl": "https://example.com/broadway/harbor-lights/tickets", "sourceName": "Fictional Broadway sample", "sourceUrl": "https://example.com/broadway", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "bway-northbound", "region": "broadway", "title": "Northbound", "theatre": "Atlas Theatre", "city": "New York", "performanceDate": "2026-09-13", "performanceTimes": ["20:00"], "lowestPrice": null, "ticketStatus": "coming-soon", "detailUrl": "https://example.com/broadway/northbound", "bookingUrl": "", "sourceName": "Fictional Broadway sample", "sourceUrl": "https://example.com/broadway", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": ["lowestPrice", "bookingUrl"] },
+    { "id": "bway-velvet-moon", "region": "broadway", "title": "Velvet Moon", "theatre": "Lyric Avenue Theatre", "city": "New York", "performanceDate": "2026-09-13", "performanceTimes": ["15:00", "20:00"], "lowestPrice": { "amount": 94, "currency": "USD", "display": "Sample tickets from $94" }, "ticketStatus": "on-sale", "detailUrl": "https://example.com/broadway/velvet-moon", "bookingUrl": "https://example.com/broadway/velvet-moon/tickets", "sourceName": "Fictional Broadway sample", "sourceUrl": "https://example.com/broadway", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "west-clockmaker", "region": "west-end", "title": "The Clockmaker's Daughter", "theatre": "Crownlight Theatre", "city": "London", "performanceDate": "2026-09-13", "performanceTimes": ["14:30", "19:30"], "lowestPrice": { "amount": 35, "currency": "GBP", "display": "Sample tickets from £35" }, "ticketStatus": "on-sale", "detailUrl": "https://example.com/west-end/clockmaker", "bookingUrl": "https://example.com/west-end/clockmaker/tickets", "sourceName": "Fictional West End sample", "sourceUrl": "https://example.com/west-end", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "west-electric-london", "region": "west-end", "title": "Electric London", "theatre": "Mercury Rooms", "city": "London", "performanceDate": "2026-09-13", "performanceTimes": ["19:45"], "lowestPrice": { "amount": 48, "currency": "GBP", "display": "Sample tickets from £48" }, "ticketStatus": "on-sale", "detailUrl": "https://example.com/west-end/electric-london", "bookingUrl": "https://example.com/west-end/electric-london/tickets", "sourceName": "Fictional West End sample", "sourceUrl": "https://example.com/west-end", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "west-paper-crown", "region": "west-end", "title": "Paper Crown", "theatre": "Kingfisher Theatre", "city": "London", "performanceDate": "2026-09-13", "performanceTimes": [], "lowestPrice": null, "ticketStatus": "unknown", "detailUrl": "https://example.com/west-end/paper-crown", "bookingUrl": "", "sourceName": "Fictional West End sample", "sourceUrl": "https://example.com/west-end", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": ["performanceTimes", "lowestPrice", "ticketStatus", "bookingUrl"] },
+    { "id": "west-second-bow", "region": "west-end", "title": "Second Bow", "theatre": "Garrick Lane Studio", "city": "London", "performanceDate": "2026-09-13", "performanceTimes": ["18:30"], "lowestPrice": { "amount": 29, "currency": "GBP", "display": "Sample tickets from £29" }, "ticketStatus": "sold-out", "detailUrl": "https://example.com/west-end/second-bow", "bookingUrl": "https://example.com/west-end/second-bow/tickets", "sourceName": "Fictional West End sample", "sourceUrl": "https://example.com/west-end", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "de-lichtspiel", "region": "germany", "title": "Lichtspiel", "theatre": "Theater am Hafenbogen", "city": "Hamburg", "performanceDate": "2026-09-13", "performanceTimes": ["19:30"], "lowestPrice": { "amount": 44, "currency": "EUR", "display": "Sample-Tickets ab 44 €" }, "ticketStatus": "on-sale", "detailUrl": "https://example.com/germany/lichtspiel", "bookingUrl": "https://example.com/germany/lichtspiel/tickets", "sourceName": "Fictional Germany sample", "sourceUrl": "https://example.com/germany", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "de-hafenherz", "region": "germany", "title": "Hafenherz", "theatre": "Elbtheater Nord", "city": "Hamburg", "performanceDate": "2026-09-13", "performanceTimes": ["15:00", "20:00"], "lowestPrice": { "amount": 62, "currency": "EUR", "display": "Sample-Tickets ab 62 €" }, "ticketStatus": "on-sale", "detailUrl": "https://example.com/germany/hafenherz", "bookingUrl": "https://example.com/germany/hafenherz/tickets", "sourceName": "Fictional Germany sample", "sourceUrl": "https://example.com/germany", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "de-letzte-takt", "region": "germany", "title": "Der letzte Takt", "theatre": "Metropol Bühne", "city": "Berlin", "performanceDate": "2026-09-13", "performanceTimes": ["19:00"], "lowestPrice": null, "ticketStatus": "unknown", "detailUrl": "https://example.com/germany/letzte-takt", "bookingUrl": "", "sourceName": "Fictional Germany sample", "sourceUrl": "https://example.com/germany", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": ["lowestPrice", "ticketStatus", "bookingUrl"] },
+    { "id": "de-sommerregen", "region": "germany", "title": "Sommerregen", "theatre": "Rheinlicht Theater", "city": "Cologne", "performanceDate": "2026-09-13", "performanceTimes": ["18:00"], "lowestPrice": { "amount": 51, "currency": "EUR", "display": "Sample-Tickets ab 51 €" }, "ticketStatus": "coming-soon", "detailUrl": "https://example.com/germany/sommerregen", "bookingUrl": "https://example.com/germany/sommerregen/tickets", "sourceName": "Fictional Germany sample", "sourceUrl": "https://example.com/germany", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "bway-midnight-matinee", "region": "broadway", "title": "Midnight Matinee", "theatre": "Majestic Lane Theatre", "city": "New York", "performanceDate": "2026-09-14", "performanceTimes": ["19:30"], "lowestPrice": { "amount": 61, "currency": "USD", "display": "Sample tickets from $61" }, "ticketStatus": "on-sale", "detailUrl": "https://example.com/broadway/midnight-matinee", "bookingUrl": "https://example.com/broadway/midnight-matinee/tickets", "sourceName": "Fictional Broadway sample", "sourceUrl": "https://example.com/broadway", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "de-hafenherz", "region": "germany", "title": "Hafenherz", "theatre": "Elbtheater Nord", "city": "Hamburg", "performanceDate": "2026-09-15", "performanceTimes": ["19:30"], "lowestPrice": { "amount": 55, "currency": "EUR", "display": "Sample-Tickets ab 55 €" }, "ticketStatus": "on-sale", "detailUrl": "https://example.com/germany/hafenherz", "bookingUrl": "https://example.com/germany/hafenherz/tickets", "sourceName": "Fictional Germany sample", "sourceUrl": "https://example.com/germany", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "west-electric-london", "region": "west-end", "title": "Electric London", "theatre": "Mercury Rooms", "city": "London", "performanceDate": "2026-09-16", "performanceTimes": ["19:45"], "lowestPrice": { "amount": 42, "currency": "GBP", "display": "Sample tickets from £42" }, "ticketStatus": "on-sale", "detailUrl": "https://example.com/west-end/electric-london", "bookingUrl": "https://example.com/west-end/electric-london/tickets", "sourceName": "Fictional West End sample", "sourceUrl": "https://example.com/west-end", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "bway-harbor-lights", "region": "broadway", "title": "Harbor Lights", "theatre": "Forty-Fourth Street Playhouse", "city": "New York", "performanceDate": "2026-09-17", "performanceTimes": ["20:00"], "lowestPrice": { "amount": 70, "currency": "USD", "display": "Sample tickets from $70" }, "ticketStatus": "on-sale", "detailUrl": "https://example.com/broadway/harbor-lights", "bookingUrl": "https://example.com/broadway/harbor-lights/tickets", "sourceName": "Fictional Broadway sample", "sourceUrl": "https://example.com/broadway", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "de-sommerregen", "region": "germany", "title": "Sommerregen", "theatre": "Rheinlicht Theater", "city": "Cologne", "performanceDate": "2026-09-18", "performanceTimes": ["20:00"], "lowestPrice": { "amount": 49, "currency": "EUR", "display": "Sample-Tickets ab 49 €" }, "ticketStatus": "on-sale", "detailUrl": "https://example.com/germany/sommerregen", "bookingUrl": "https://example.com/germany/sommerregen/tickets", "sourceName": "Fictional Germany sample", "sourceUrl": "https://example.com/germany", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "west-clockmaker", "region": "west-end", "title": "The Clockmaker's Daughter", "theatre": "Crownlight Theatre", "city": "London", "performanceDate": "2026-09-19", "performanceTimes": ["14:30", "19:30"], "lowestPrice": { "amount": 38, "currency": "GBP", "display": "Sample tickets from £38" }, "ticketStatus": "on-sale", "detailUrl": "https://example.com/west-end/clockmaker", "bookingUrl": "https://example.com/west-end/clockmaker/tickets", "sourceName": "Fictional West End sample", "sourceUrl": "https://example.com/west-end", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] }
   ],
-  "warnings": ["This is fictional local data for foundation testing only."],
   "details": [
-    {
-      "id": "foundation-curtain-call",
-      "title": "Curtain Call",
-      "region": "broadway",
-      "theatre": "Sample Theatre",
-      "city": "New York",
-      "performanceFacts": ["One fictional performance is listed at 19:30."],
-      "ticketFacts": [],
-      "excerpt": "A fictional detail record used only to prove the permanent source.detail(id) seam.",
-      "sourceName": "Local foundation sample",
-      "sourceUrl": "",
-      "bookingUrl": "",
-      "retrievedAt": "2026-09-13T02:15:00.000Z",
-      "missingFields": ["ticketFacts", "sourceUrl", "bookingUrl"]
-    }
+    { "id": "bway-midnight-matinee", "title": "Midnight Matinee", "region": "broadway", "theatre": "Majestic Lane Theatre", "city": "New York", "performanceFacts": ["Fictional matinee and evening performances are included in the sample schedule."], "ticketFacts": ["The sample advertises a starting price; it is not a real offer."], "excerpt": "A fictional backstage comedy used to demonstrate the shared detail panel without retrieving live information.", "sourceName": "Fictional Broadway sample", "sourceUrl": "https://example.com/broadway/midnight-matinee", "bookingUrl": "https://example.com/broadway/midnight-matinee/tickets", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "bway-harbor-lights", "title": "Harbor Lights", "region": "broadway", "theatre": "Forty-Fourth Street Playhouse", "city": "New York", "performanceFacts": ["The fictional sample includes one evening performance."], "ticketFacts": ["A fictional starting price is shown for filter testing."], "excerpt": "A fictional waterfront musical created solely for Phase 1 interaction testing.", "sourceName": "Fictional Broadway sample", "sourceUrl": "https://example.com/broadway/harbor-lights", "bookingUrl": "https://example.com/broadway/harbor-lights/tickets", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "bway-northbound", "title": "Northbound", "region": "broadway", "theatre": "Atlas Theatre", "city": "New York", "performanceFacts": ["One fictional evening time is provided."], "ticketFacts": [], "excerpt": "This fictional record intentionally omits price and booking information to prove missing-field handling.", "sourceName": "Fictional Broadway sample", "sourceUrl": "https://example.com/broadway/northbound", "bookingUrl": "", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": ["ticketFacts", "bookingUrl"] },
+    { "id": "bway-velvet-moon", "title": "Velvet Moon", "region": "broadway", "theatre": "Lyric Avenue Theatre", "city": "New York", "performanceFacts": ["Fictional afternoon and evening performances are shown."], "ticketFacts": ["The displayed price is fictional sample data."], "excerpt": "A fictional jazz-age romance prepared for comparison and detail-panel testing.", "sourceName": "Fictional Broadway sample", "sourceUrl": "https://example.com/broadway/velvet-moon", "bookingUrl": "https://example.com/broadway/velvet-moon/tickets", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "west-clockmaker", "title": "The Clockmaker's Daughter", "region": "west-end", "theatre": "Crownlight Theatre", "city": "London", "performanceFacts": ["Two fictional local-time performances are included."], "ticketFacts": ["The sample starting price remains in GBP."], "excerpt": "A fictional London musical used to test the West End path and currency display.", "sourceName": "Fictional West End sample", "sourceUrl": "https://example.com/west-end/clockmaker", "bookingUrl": "https://example.com/west-end/clockmaker/tickets", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "west-electric-london", "title": "Electric London", "region": "west-end", "theatre": "Mercury Rooms", "city": "London", "performanceFacts": ["One fictional evening time is listed."], "ticketFacts": ["The sample price is not a live ticket quote."], "excerpt": "A fictional modern London musical created for local-only product testing.", "sourceName": "Fictional West End sample", "sourceUrl": "https://example.com/west-end/electric-london", "bookingUrl": "https://example.com/west-end/electric-london/tickets", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "west-paper-crown", "title": "Paper Crown", "region": "west-end", "theatre": "Kingfisher Theatre", "city": "London", "performanceFacts": [], "ticketFacts": [], "excerpt": "This fictional record intentionally lacks time, price, status, and booking details.", "sourceName": "Fictional West End sample", "sourceUrl": "https://example.com/west-end/paper-crown", "bookingUrl": "", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": ["performanceFacts", "ticketFacts", "bookingUrl"] },
+    { "id": "west-second-bow", "title": "Second Bow", "region": "west-end", "theatre": "Garrick Lane Studio", "city": "London", "performanceFacts": ["One fictional early-evening performance is shown."], "ticketFacts": ["The fictional status is sold out."], "excerpt": "A fictional chamber musical that demonstrates a clear sold-out status supplied by sample data.", "sourceName": "Fictional West End sample", "sourceUrl": "https://example.com/west-end/second-bow", "bookingUrl": "https://example.com/west-end/second-bow/tickets", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "de-lichtspiel", "title": "Lichtspiel", "region": "germany", "theatre": "Theater am Hafenbogen", "city": "Hamburg", "performanceFacts": ["One fictional local-time performance is shown."], "ticketFacts": ["The fictional starting price remains in EUR."], "excerpt": "Ein fiktives Musical für den lokalen Beispieldatensatz der Phase 1.", "sourceName": "Fictional Germany sample", "sourceUrl": "https://example.com/germany/lichtspiel", "bookingUrl": "https://example.com/germany/lichtspiel/tickets", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "de-hafenherz", "title": "Hafenherz", "region": "germany", "theatre": "Elbtheater Nord", "city": "Hamburg", "performanceFacts": ["Fictional afternoon and evening performances are included."], "ticketFacts": ["The sample price is not a live offer."], "excerpt": "A fictional Hamburg musical used to test city filtering and comparison.", "sourceName": "Fictional Germany sample", "sourceUrl": "https://example.com/germany/hafenherz", "bookingUrl": "https://example.com/germany/hafenherz/tickets", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] },
+    { "id": "de-letzte-takt", "title": "Der letzte Takt", "region": "germany", "theatre": "Metropol Bühne", "city": "Berlin", "performanceFacts": ["One fictional evening performance is provided."], "ticketFacts": [], "excerpt": "This fictional Berlin listing intentionally leaves its price and ticket status unknown.", "sourceName": "Fictional Germany sample", "sourceUrl": "https://example.com/germany/letzte-takt", "bookingUrl": "", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": ["ticketFacts", "bookingUrl"] },
+    { "id": "de-sommerregen", "title": "Sommerregen", "region": "germany", "theatre": "Rheinlicht Theater", "city": "Cologne", "performanceFacts": ["A fictional evening performance is listed."], "ticketFacts": ["The fictional status varies by sample date."], "excerpt": "A fictional Cologne musical included to demonstrate multiple German cities.", "sourceName": "Fictional Germany sample", "sourceUrl": "https://example.com/germany/sommerregen", "bookingUrl": "https://example.com/germany/sommerregen/tickets", "retrievedAt": "2026-09-13T02:15:00.000Z", "missingFields": [] }
   ]
 }
