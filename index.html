@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A foundation preview for Musicals This Week.">
+    <title>Musicals This Week — Foundation</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <main id="app-shell" class="shell" aria-labelledby="page-title">
+      <header class="masthead">
+        <p class="eyebrow">Phase 0 · Foundation preview</p>
+        <h1 id="page-title">Musicals This Week</h1>
+        <p class="lede">A stable starting point for the musical finder.</p>
+      </header>
+
+      <section class="panel" aria-labelledby="demo-title">
+        <div class="panel-heading">
+          <div>
+            <p class="section-label">Foundation states</p>
+            <h2 id="demo-title">Test the data and interface seams</h2>
+          </div>
+          <span id="working-indicator" class="working" role="status" hidden>Working…</span>
+        </div>
+
+        <p class="instruction">
+          These generic controls prove that loading, empty, error, result, status, and clear states work before product features are added.
+        </p>
+
+        <div class="actions" aria-label="Foundation test actions">
+          <button id="main-action" data-action type="button">Load sample</button>
+          <button id="empty-action" data-action class="secondary" type="button">Show empty state</button>
+          <button id="error-action" data-action class="secondary" type="button">Show error state</button>
+          <button id="clear-action" data-action class="quiet" type="button">Clear results</button>
+        </div>
+
+        <p id="status-message" class="message status" role="status" aria-live="polite"></p>
+        <p id="error-message" class="message error" role="alert" hidden></p>
+        <p id="empty-message" class="message empty" role="status" hidden></p>
+
+        <section id="results-section" class="results" aria-labelledby="results-title">
+          <div class="results-heading">
+            <h2 id="results-title">Sample results</h2>
+            <span class="phase-tag">Local JSON only</span>
+          </div>
+          <div id="results-list" class="result-list"></div>
+        </section>
+      </section>
+    </main>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

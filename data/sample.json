@@ -1,0 +1,68 @@
+{
+  "region": "broadway",
+  "selectedDate": "2026-09-13",
+  "dataDay": "2026-09-13",
+  "fetchedAt": "2026-09-13T02:15:00.000Z",
+  "source": {
+    "name": "Local foundation sample",
+    "url": ""
+  },
+  "listings": [
+    {
+      "id": "foundation-curtain-call",
+      "region": "broadway",
+      "title": "Curtain Call",
+      "theatre": "Sample Theatre",
+      "city": "New York",
+      "performanceDate": "2026-09-13",
+      "performanceTimes": ["19:30"],
+      "lowestPrice": null,
+      "ticketStatus": "unknown",
+      "detailUrl": "",
+      "bookingUrl": "",
+      "sourceName": "Local foundation sample",
+      "sourceUrl": "",
+      "retrievedAt": "2026-09-13T02:15:00.000Z",
+      "missingFields": ["lowestPrice", "detailUrl", "bookingUrl"]
+    },
+    {
+      "id": "foundation-overture",
+      "region": "broadway",
+      "title": "The Overture",
+      "theatre": "Demo Playhouse",
+      "city": "New York",
+      "performanceDate": "2026-09-13",
+      "performanceTimes": ["14:00", "20:00"],
+      "lowestPrice": {
+        "amount": 50,
+        "currency": "USD",
+        "display": "Sample price $50"
+      },
+      "ticketStatus": "on-sale",
+      "detailUrl": "",
+      "bookingUrl": "",
+      "sourceName": "Local foundation sample",
+      "sourceUrl": "",
+      "retrievedAt": "2026-09-13T02:15:00.000Z",
+      "missingFields": ["detailUrl", "bookingUrl"]
+    }
+  ],
+  "warnings": ["This is fictional local data for foundation testing only."],
+  "details": [
+    {
+      "id": "foundation-curtain-call",
+      "title": "Curtain Call",
+      "region": "broadway",
+      "theatre": "Sample Theatre",
+      "city": "New York",
+      "performanceFacts": ["One fictional performance is listed at 19:30."],
+      "ticketFacts": [],
+      "excerpt": "A fictional detail record used only to prove the permanent source.detail(id) seam.",
+      "sourceName": "Local foundation sample",
+      "sourceUrl": "",
+      "bookingUrl": "",
+      "retrievedAt": "2026-09-13T02:15:00.000Z",
+      "missingFields": ["ticketFacts", "sourceUrl", "bookingUrl"]
+    }
+  ]
+}

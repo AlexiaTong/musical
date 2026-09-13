@@ -1,0 +1,90 @@
+:root {
+  --color-ink: #211b1b; --color-muted: #6f6260; --color-paper: #fffaf0;
+  --color-canvas: #f1e8db; --color-panel: #fffdf8; --color-accent: #7b1f2b;
+  --color-accent-dark: #57131d; --color-gold: #b7893d; --color-line: #dacbbb;
+  --color-error: #8f1e20; --color-error-soft: #fff0ef; --color-empty-soft: #f5eee4;
+  --space-1: 0.5rem; --space-2: 0.75rem; --space-3: 1rem;
+  --space-4: 1.5rem; --space-5: 2rem; --space-6: 3rem;
+  --radius-small: 0.35rem; --radius-large: 0.75rem;
+  --shadow: 0 1rem 2.5rem rgb(60 31 26 / 12%); color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  min-width: 20rem; margin: 0; color: var(--color-ink);
+  background: var(--color-canvas); font-family: Georgia, "Times New Roman", serif;
+  font-size: 1rem; line-height: 1.55;
+}
+
+button {
+  min-height: 2.75rem; padding: 0.65rem 1rem;
+  border: 2px solid var(--color-accent); border-radius: var(--radius-small);
+  color: white; background: var(--color-accent);
+  font: 700 0.95rem/1.2 Arial, sans-serif; cursor: pointer;
+}
+
+button:hover { background: var(--color-accent-dark); border-color: var(--color-accent-dark); }
+button:focus-visible { outline: 3px solid var(--color-gold); outline-offset: 3px; }
+button:disabled { cursor: wait; opacity: 0.55; }
+button.secondary { color: var(--color-accent); background: transparent; }
+button.quiet { color: var(--color-ink); background: var(--color-paper); border-color: var(--color-line); }
+
+.shell { width: min(70rem, calc(100% - 2rem)); margin: 0 auto; padding: var(--space-6) 0; }
+.masthead { padding: var(--space-4) 0 var(--space-5); border-top: 0.35rem solid var(--color-accent); }
+.eyebrow, .section-label, .phase-tag {
+  margin: 0; color: var(--color-accent); font: 700 0.78rem/1.2 Arial, sans-serif;
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+
+h1, h2, p { margin-top: 0; }
+h1 {
+  max-width: 12ch; margin-bottom: var(--space-1);
+  font-size: clamp(2.5rem, 8vw, 5.5rem); line-height: 0.94;
+}
+h2 { margin: var(--space-1) 0 0; font-size: clamp(1.35rem, 3vw, 2rem); line-height: 1.15; }
+.lede, .instruction { color: var(--color-muted); }
+
+.panel {
+  padding: clamp(1.25rem, 4vw, 2.5rem); border: 1px solid var(--color-line);
+  border-radius: var(--radius-large); background: var(--color-panel); box-shadow: var(--shadow);
+}
+.panel-heading, .results-heading {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-3);
+}
+.working, .phase-tag {
+  flex: 0 0 auto; padding: var(--space-1) var(--space-2);
+  border: 1px solid var(--color-gold); border-radius: 999px; background: var(--color-paper);
+}
+.instruction { max-width: 44rem; margin: var(--space-3) 0 var(--space-4); }
+.actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+.message {
+  margin: var(--space-4) 0 0; padding: var(--space-3);
+  border-left: 0.3rem solid var(--color-gold); background: var(--color-paper);
+}
+.message:empty, [hidden] { display: none; }
+.message.error { color: var(--color-error); border-color: var(--color-error); background: var(--color-error-soft); }
+.message.empty { background: var(--color-empty-soft); }
+
+.results { margin-top: var(--space-5); padding-top: var(--space-4); border-top: 1px solid var(--color-line); }
+.result-list {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3); margin-top: var(--space-3);
+}
+.result-card {
+  padding: var(--space-4); border: 1px solid var(--color-line);
+  border-top: 0.3rem solid var(--color-accent); border-radius: var(--radius-small);
+  background: var(--color-paper);
+}
+.result-card h3 { margin: 0 0 var(--space-1); font-size: 1.25rem; }
+.result-card p { margin-bottom: 0; color: var(--color-muted); }
+
+@media (max-width: 37.5rem) {
+  .shell { width: min(100% - 1rem, 70rem); padding: var(--space-4) 0; }
+  .panel-heading, .results-heading { align-items: stretch; flex-direction: column; }
+  .working, .phase-tag { align-self: flex-start; }
+  .actions, .actions button, .result-list { width: 100%; }
+  .actions button, .result-list { display: block; }
+  .actions button + button, .result-card + .result-card { margin-top: var(--space-2); }
+}
