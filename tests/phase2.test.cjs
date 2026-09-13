@@ -3,6 +3,8 @@ const assert = require("node:assert/strict");
 const shows = require("../api/shows.js");
 const showDetail = require("../api/show-detail.js");
 
+process.env.FIRECRAWL_API_KEY = "test-only-placeholder";
+
 function responseRecorder() {
   return {
     headers: {},
@@ -54,7 +56,7 @@ test("successful listings are normalized and receive shared cache headers", asyn
       return {
         success: true,
         data: {
-          metadata: { url: "https://www.broadway.com/shows/wicked/" },
+          metadata: { url: "https://www.broadway.com/" },
           json: {
             performances: [{
               explicitSelectedDate: true,
@@ -83,6 +85,47 @@ test("successful listings are normalized and receive shared cache headers", asyn
     assert.deepEqual(response.body.listings[0].performanceTimes, ["7:00pm"]);
     assert.equal(response.body.listings[0].lowestPrice.currency, "USD");
     assert.equal(response.body.dataDay, beijingDay());
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
+test("West End catalogue expands approved musical pages and tolerates a partial failure", async () => {
+  const originalFetch = global.fetch;
+  const requestedUrls = [];
+  global.fetch = async (_url, options) => {
+    const requested = JSON.parse(options.body).url;
+    requestedUrls.push(requested);
+    if (requested === "https://www.londontheatredirect.com/") {
+      return { ok: true, async json() { return { success: true, data: { metadata: { url: requested }, json: { shows: [
+        { title: "Hamilton", detailUrl: "https://www.londontheatredirect.com/musical/hamilton-tickets" },
+        { title: "Wicked", detailUrl: "https://www.londontheatredirect.com/musical/wicked-tickets" },
+      ] } } }; } };
+    }
+    if (requested.includes("wicked")) throw new Error("temporary upstream failure");
+    return { ok: true, async json() { return { success: true, data: { metadata: { url: requested }, json: { performances: [{
+      explicitSelectedDate: true,
+      title: "Hamilton",
+      theatre: "Victoria Palace Theatre",
+      city: "London",
+      performanceDate: beijingDay(),
+      performanceTimes: ["19:30"],
+      lowestPriceAmount: 45,
+      lowestPriceDisplay: "from £45",
+      ticketStatus: "on-sale",
+      detailUrl: requested,
+      bookingUrl: `${requested}/booking`,
+    }] } } }; } };
+  };
+  try {
+    const response = responseRecorder();
+    await shows({ method: "GET", query: { region: "west-end", date: beijingDay(), refreshDay: beijingDay() } }, response);
+    assert.equal(response.statusCode, 200);
+    assert.equal(response.body.listings.length, 1);
+    assert.equal(response.body.listings[0].title, "Hamilton");
+    assert.equal(response.body.listings[0].lowestPrice.currency, "GBP");
+    assert.equal(requestedUrls.length, 3);
+    assert.match(response.body.warnings[1], /1 catalogue show page/);
   } finally {
     global.fetch = originalFetch;
   }

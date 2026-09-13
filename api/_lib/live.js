@@ -3,23 +3,26 @@ const { isIP } = require("node:net");
 
 const TIME_ZONE = "Asia/Shanghai";
 const RESULT_LIMIT = 24;
+const CATALOG_LIMIT = 16;
+const DETAIL_CONCURRENCY = 6;
 const FIRECRAWL_URL = "https://api.firecrawl.dev/v2/scrape";
 const TICKET_STATUSES = new Set(["on-sale", "coming-soon", "sold-out", "closed", "unknown"]);
 
 const REGIONS = Object.freeze({
   broadway: Object.freeze({
     name: "Broadway.com",
-    url: "https://www.broadway.com/shows/wicked/",
+    url: "https://www.broadway.com/",
     currency: "USD",
-    sourceIsDetail: true,
-    coverage: "Broadway.com performances explicitly exposed on the prepared Wicked schedule page.",
+    sourceIsDetail: false,
+    coverage: "Broadway.com musical performances explicitly exposed for the selected date on its catalogue homepage.",
   }),
   "west-end": Object.freeze({
     name: "London Theatre Direct",
-    url: "https://www.londontheatredirect.com/musical/hadestown-tickets",
+    url: "https://www.londontheatredirect.com/",
     currency: "GBP",
-    sourceIsDetail: true,
-    coverage: "London Theatre Direct performances explicitly exposed on the prepared Hadestown page.",
+    sourceIsDetail: false,
+    strategy: "catalogue-detail",
+    coverage: `London Theatre Direct musical catalogue checked against up to ${CATALOG_LIMIT} approved show pages for the selected date.`,
   }),
   germany: Object.freeze({
     name: "Musical1",
@@ -138,6 +141,29 @@ function listingSchema() {
       },
     },
     required: ["performances"],
+  };
+}
+
+function catalogueSchema() {
+  return {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+      shows: {
+        type: "array",
+        maxItems: CATALOG_LIMIT,
+        items: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            title: { type: "string" },
+            detailUrl: { type: "string" },
+          },
+          required: ["title", "detailUrl"],
+        },
+      },
+    },
+    required: ["shows"],
   };
 }
 
@@ -260,18 +286,78 @@ function normalizeListings(raw, context, retrievedAt) {
   }).sort((left, right) => (left.performanceTimes[0] || "99:99").localeCompare(right.performanceTimes[0] || "99:99") || left.title.localeCompare(right.title)).slice(0, RESULT_LIMIT);
 }
 
+function listingPrompt(context) {
+  return `Extract only musical-theatre performances that this public source explicitly supports for ${context.date} in ${context.region}. Exclude plays, concerts, opera, archived productions, navigation, editorial articles, and promotional blocks. Set explicitSelectedDate true only with visible evidence for that exact date. Return exact visible title, theatre, city, date as YYYY-MM-DD, all local performance times, lowest advertised price amount and display with source currency, explicit ticket-sale status mapped to on-sale, coming-soon, sold-out, closed, or unknown, an approved same-source detail URL, and the direct booking URL when present. Use empty values or null for unavailable fields. Do not infer, translate, convert currency, or invent facts. Return at most ${RESULT_LIMIT} items.`;
+}
+
+async function scrapeListingPage(context, source) {
+  const pageContext = { ...context, source };
+  const raw = await scrape({ url: source.url, prompt: listingPrompt(pageContext), schema: listingSchema(), region: context.region });
+  return normalizeListings(raw, pageContext, new Date().toISOString());
+}
+
+async function loadCatalogueDetails(context) {
+  const prompt = `From this London Theatre Direct catalogue, return up to ${CATALOG_LIMIT} currently bookable musical-theatre productions and their canonical same-site show detail URLs. Prefer entries presented as musicals. Exclude plays, concerts, opera, attractions, editorial pages, navigation links, duplicates, and booking-flow URLs. Do not follow links or invent entries.`;
+  const raw = await scrape({ url: context.source.url, prompt, schema: catalogueSchema(), region: context.region });
+  const values = Array.isArray(raw.shows) ? raw.shows : [];
+  const seen = new Set();
+  const urls = values.flatMap((show) => {
+    const candidate = publicUrl(show && show.detailUrl, APPROVED_HOSTS[context.region]);
+    if (!candidate) return [];
+    const parsed = new URL(candidate);
+    if (!parsed.pathname.toLowerCase().startsWith("/musical/")) return [];
+    if (seen.has(candidate)) return [];
+    seen.add(candidate);
+    return [candidate];
+  }).slice(0, CATALOG_LIMIT);
+  if (!urls.length) return { listings: [], failures: 0 };
+
+  const listings = [];
+  let failures = 0;
+  for (let offset = 0; offset < urls.length; offset += DETAIL_CONCURRENCY) {
+    const batch = urls.slice(offset, offset + DETAIL_CONCURRENCY);
+    const results = await Promise.allSettled(batch.map((url) => scrapeListingPage(context, {
+      ...context.source,
+      url,
+      sourceIsDetail: true,
+      strategy: undefined,
+    })));
+    for (const result of results) {
+      if (result.status === "fulfilled") listings.push(...result.value);
+      else failures += 1;
+    }
+  }
+  return { listings, failures };
+}
+
 async function loadListings(context) {
-  const prompt = `Extract only musical-theatre performances that this prepared public source explicitly supports for ${context.date} in ${context.region}. Exclude plays, concerts, opera, archived productions, navigation, editorial articles, and promotional blocks. Set explicitSelectedDate true only with visible evidence for that exact date. Return exact visible title, theatre, city, date as YYYY-MM-DD, all local performance times, lowest advertised price amount and display with source currency, explicit ticket-sale status mapped to on-sale, coming-soon, sold-out, closed, or unknown, an approved same-source detail URL, and the direct booking URL when present. Use empty values or null for unavailable fields. Do not infer, translate, convert currency, or invent facts. Return at most ${RESULT_LIMIT} items.`;
-  const raw = await scrape({ url: context.source.url, prompt, schema: listingSchema(), region: context.region });
   const fetchedAt = new Date().toISOString();
+  let listings;
+  let failures = 0;
+  if (context.source.strategy === "catalogue-detail") {
+    const result = await loadCatalogueDetails(context);
+    listings = result.listings;
+    failures = result.failures;
+  } else {
+    listings = await scrapeListingPage(context, context.source);
+  }
+  const seen = new Set();
+  listings = listings.filter((item) => {
+    const key = JSON.stringify([item.title, item.theatre, item.city, item.performanceDate, item.performanceTimes]);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).sort((left, right) => (left.performanceTimes[0] || "99:99").localeCompare(right.performanceTimes[0] || "99:99") || left.title.localeCompare(right.title)).slice(0, RESULT_LIMIT);
+  const warnings = [context.source.coverage];
+  if (failures) warnings.push(`${failures} catalogue show page${failures === 1 ? "" : "s"} could not be checked; other verified results are shown.`);
   return {
     region: context.region,
     selectedDate: context.date,
     dataDay: context.refreshDay,
     fetchedAt,
     source: { name: context.source.name, url: context.source.url },
-    listings: normalizeListings(raw, context, fetchedAt),
-    warnings: [context.source.coverage],
+    listings,
+    warnings,
   };
 }
 
@@ -326,4 +412,3 @@ module.exports = {
   sendError,
   validateListingQuery,
 };
-
