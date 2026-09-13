@@ -4,7 +4,8 @@ const { isIP } = require("node:net");
 const TIME_ZONE = "Asia/Shanghai";
 const RESULT_LIMIT = 24;
 const CATALOG_LIMIT = 16;
-const DETAIL_CONCURRENCY = 6;
+const DETAIL_CONCURRENCY = 4;
+const RETRY_CONCURRENCY = 2;
 const FIRECRAWL_URL = "https://api.firecrawl.dev/v2/scrape";
 const TICKET_STATUSES = new Set(["on-sale", "coming-soon", "sold-out", "closed", "unknown"]);
 
@@ -313,21 +314,27 @@ async function loadCatalogueDetails(context) {
   if (!urls.length) return { listings: [], failures: 0 };
 
   const listings = [];
-  let failures = 0;
-  for (let offset = 0; offset < urls.length; offset += DETAIL_CONCURRENCY) {
-    const batch = urls.slice(offset, offset + DETAIL_CONCURRENCY);
-    const results = await Promise.allSettled(batch.map((url) => scrapeListingPage(context, {
-      ...context.source,
-      url,
-      sourceIsDetail: true,
-      strategy: undefined,
-    })));
-    for (const result of results) {
-      if (result.status === "fulfilled") listings.push(...result.value);
-      else failures += 1;
+  async function checkPages(pageUrls, concurrency) {
+    const failedUrls = [];
+    for (let offset = 0; offset < pageUrls.length; offset += concurrency) {
+      const batch = pageUrls.slice(offset, offset + concurrency);
+      const results = await Promise.allSettled(batch.map((url) => scrapeListingPage(context, {
+        ...context.source,
+        url,
+        sourceIsDetail: true,
+        strategy: undefined,
+      })));
+      for (let index = 0; index < results.length; index += 1) {
+        const result = results[index];
+        if (result.status === "fulfilled") listings.push(...result.value);
+        else failedUrls.push(batch[index]);
+      }
     }
+    return failedUrls;
   }
-  return { listings, failures };
+  const failedUrls = await checkPages(urls, DETAIL_CONCURRENCY);
+  const retryFailures = failedUrls.length ? await checkPages(failedUrls, RETRY_CONCURRENCY) : [];
+  return { listings, failures: retryFailures.length };
 }
 
 async function loadListings(context) {

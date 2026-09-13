@@ -124,7 +124,7 @@ test("West End catalogue expands approved musical pages and tolerates a partial 
     assert.equal(response.body.listings.length, 1);
     assert.equal(response.body.listings[0].title, "Hamilton");
     assert.equal(response.body.listings[0].lowestPrice.currency, "GBP");
-    assert.equal(requestedUrls.length, 3);
+    assert.equal(requestedUrls.length, 4);
     assert.match(response.body.warnings[1], /1 catalogue show page/);
   } finally {
     global.fetch = originalFetch;
