@@ -79,3 +79,27 @@ Run on 2026-09-13 against `http://127.0.0.1:4173`:
 23. PASS — opening `Midnight Matinee` then `Harbor Lights` replaced the one shared detail result; the private lookup ID was omitted.
 24. PASS — intentionally missing time, price, status, facts, and booking values rendered readable unavailable states.
 25. PASS — keyboard focus styles are present; the 375px browser check had 16px body text, 44px visible buttons, and no horizontal overflow.
+
+## Phase 2 latest run
+
+Run on 2026-09-13 against `https://musical-weld-six.vercel.app/` and the focused Node test suite:
+
+26. PASS — permanent source/UI names and DOM IDs remain unchanged; the collapsed foundation sample checks remain available.
+27. PASS — `PHASE2_FEASIBILITY.md` records all six approved sources, test dates, exact evidence, and the three accepted adapters.
+28. PASS — Broadway, West End, and Germany returned the permanent normalized response/item keys from the public routes.
+29. PASS — unit and public checks returned readable 400 errors for invalid region, stale refresh day, malformed URL, and unsafe detail input.
+30. PASS — server normalization requires `explicitSelectedDate === true` and an exact requested-date match before an item is returned.
+31. PASS — public results preserved `7:00pm` USD, `14:30`/`19:30` GBP, and German local times with EUR values.
+32. PASS — normalized constructors return every contract key and compute `missingFields`; unavailable values are not synthesized.
+33. PASS — the accepted deterministic date/location/budget helper and browser orchestration remain unchanged around live normalized items.
+34. PASS — the accepted three-card comparison and readable fourth-item rejection remain unchanged around live normalized items.
+35. PASS — the public Wicked detail action returned one bounded normalized detail from one approved Broadway.com page.
+36. PASS — focused tests rejected malformed, credential-bearing, localhost, cross-region, unapproved, and redirected-unapproved URLs.
+37. PASS — route errors use bounded readable JSON; browser listing/detail catches preserve controls and the shared panel.
+38. PASS — listing URLs include the server-validated Beijing `refreshDay`, so each new Beijing day uses a distinct cache key.
+39. PASS — successful public listing GETs returned `s-maxage=900, stale-while-revalidate=21600`; detail and errors returned no-store.
+40. PASS — tracked credential scan found no key value; the exact environment-variable name appears only in server/docs/test context and never in a browser bundle or response.
+41. PASS — public error responses contained no Firecrawl body, credential, or stack trace.
+42. PASS — code inspection found no live-seat query, purchase flow, map, account, Crawl call, ticket API, or arbitrary scrape field.
+43. PASS — all JavaScript syntax checks and four focused Node tests passed; responsive CSS/focus behavior remains unchanged from the accepted 375px Phase 1 check.
+44. PASS — Vercel deployment succeeded; root returned 200 with live labels, three listing journeys returned 200, one deep read returned 200, and public error paths returned readable 400 responses.
