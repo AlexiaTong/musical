@@ -56,7 +56,7 @@ Use the six user-approved public source families below. Phase 2 listing retrieva
 | Broadway | Broadway Direct | `https://broadwaydirect.com/shows/` | Approved, but its prepared listing page did not expose selected-date times in the Phase 2 gate. |
 | Broadway | Broadway.com | `https://www.broadway.com/` | Date-feasible catalogue homepage used by the live adapter. |
 | West End | Official London Theatre | `https://officiallondontheatre.com/london-musicals/` | Approved, but its prepared listing page did not expose selected-date times in the Phase 2 gate. |
-| West End | London Theatre Direct | `https://www.londontheatredirect.com/` | Catalogue homepage plus a bounded set of approved musical detail pages used by the live adapter. |
+| West End | London Theatre Direct | `https://www.londontheatredirect.com/` | The catalogue's fixed public date-filter route supplies matching musicals; detail pages remain Firecrawl deep-read sources. |
 | Germany | Stage Entertainment Germany | `https://www.stage-entertainment.de/` | Approved, but its prepared landing page did not expose selected-date times in the Phase 2 gate. |
 | Germany | Musical1 | `https://www.musical1.de/musicals/hamburg/` | Date-feasible prepared Hamburg listing used by the live adapter. |
 

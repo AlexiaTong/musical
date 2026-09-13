@@ -100,6 +100,8 @@ Run on 2026-09-13 against `https://musical-weld-six.vercel.app/` and the focused
 39. PASS — successful public listing GETs returned `s-maxage=900, stale-while-revalidate=21600`; detail and errors returned no-store.
 40. PASS — tracked credential scan found no key value; the exact environment-variable name appears only in server/docs/test context and never in a browser bundle or response.
 41. PASS — public error responses contained no Firecrawl body, credential, or stack trace.
-42. PASS — code inspection found no live-seat query, purchase flow, map, account, Crawl call, ticket API, or arbitrary scrape field.
-43. PASS — all JavaScript syntax checks and four focused Node tests passed; responsive CSS/focus behavior remains unchanged from the accepted 375px Phase 1 check.
+42. PASS — code inspection found no live-seat query, purchase flow, map, account, Crawl call, multi-source ticket API aggregation, or arbitrary scrape field.
+43. PASS — all JavaScript syntax checks and five focused Node tests passed; responsive CSS/focus behavior remains unchanged from the accepted 375px Phase 1 check.
 44. PASS — Vercel deployment succeeded; root returned 200 with live labels, three listing journeys returned 200, one deep read returned 200, and public error paths returned readable 400 responses.
+45. PASS — Broadway.com catalogue-root verification returned eleven distinct date-specific musicals instead of the former single hard-coded Wicked result.
+46. PASS — London Theatre Direct's public date filter returned twenty-seven matching musicals in one bounded same-source request; the adapter caps the browser response at twenty-four and marks omitted catalogue times unavailable.

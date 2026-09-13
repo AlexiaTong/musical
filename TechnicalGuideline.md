@@ -440,7 +440,7 @@ Use Firecrawl **Scrape**, never unrestricted **Crawl**.
 
 ### Listing retrieval
 
-- Prepared public pages only.
+- Prepared public pages or one fixed, same-source public catalogue filter only.
 - Strict JSON schema.
 - Explicit selected date and region in the extraction instruction.
 - Extract musicals only.
@@ -461,7 +461,7 @@ Use Firecrawl **Scrape**, never unrestricted **Crawl**.
 - bypass login, CAPTCHA, robots rules, or access controls;
 - query live seats;
 - interact with checkout;
-- call multiple ticket APIs;
+- call multiple ticket APIs or aggregate reseller APIs;
 - send a raw Firecrawl response to the browser;
 - retry without a strict limit.
 
@@ -521,7 +521,7 @@ Use exactly:
 
 `FIRECRAWL_API_KEY`
 
-- Local: `.env.local`, already ignored by Git.
+- Local: not required for this project; do not create a local key file merely to run the deployed flow.
 - Vercel: selected project environment settings.
 - Server-side only.
 - Never in `config.js`, `source.js`, frontend assets, Markdown, fixtures, screenshots, logs, errors, JSON responses, or commits.

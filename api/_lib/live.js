@@ -3,10 +3,8 @@ const { isIP } = require("node:net");
 
 const TIME_ZONE = "Asia/Shanghai";
 const RESULT_LIMIT = 24;
-const CATALOG_LIMIT = 16;
-const DETAIL_CONCURRENCY = 4;
-const RETRY_CONCURRENCY = 2;
 const FIRECRAWL_URL = "https://api.firecrawl.dev/v2/scrape";
+const LONDON_EVENTS_URL = "https://www.londontheatredirect.com/api/events";
 const TICKET_STATUSES = new Set(["on-sale", "coming-soon", "sold-out", "closed", "unknown"]);
 
 const REGIONS = Object.freeze({
@@ -22,8 +20,8 @@ const REGIONS = Object.freeze({
     url: "https://www.londontheatredirect.com/",
     currency: "GBP",
     sourceIsDetail: false,
-    strategy: "catalogue-detail",
-    coverage: `London Theatre Direct musical catalogue checked against up to ${CATALOG_LIMIT} approved show pages for the selected date.`,
+    strategy: "public-date-filter",
+    coverage: `London Theatre Direct's public catalogue date filter returned up to ${RESULT_LIMIT} musical productions for the selected date; times remain unavailable when the catalogue omits them.`,
   }),
   germany: Object.freeze({
     name: "Musical1",
@@ -142,29 +140,6 @@ function listingSchema() {
       },
     },
     required: ["performances"],
-  };
-}
-
-function catalogueSchema() {
-  return {
-    type: "object",
-    additionalProperties: false,
-    properties: {
-      shows: {
-        type: "array",
-        maxItems: CATALOG_LIMIT,
-        items: {
-          type: "object",
-          additionalProperties: false,
-          properties: {
-            title: { type: "string" },
-            detailUrl: { type: "string" },
-          },
-          required: ["title", "detailUrl"],
-        },
-      },
-    },
-    required: ["shows"],
   };
 }
 
@@ -297,54 +272,79 @@ async function scrapeListingPage(context, source) {
   return normalizeListings(raw, pageContext, new Date().toISOString());
 }
 
-async function loadCatalogueDetails(context) {
-  const prompt = `From this London Theatre Direct catalogue, return up to ${CATALOG_LIMIT} currently bookable musical-theatre productions and their canonical same-site show detail URLs. Prefer entries presented as musicals. Exclude plays, concerts, opera, attractions, editorial pages, navigation links, duplicates, and booking-flow URLs. Do not follow links or invent entries.`;
-  const raw = await scrape({ url: context.source.url, prompt, schema: catalogueSchema(), region: context.region });
-  const values = Array.isArray(raw.shows) ? raw.shows : [];
-  const seen = new Set();
-  const urls = values.flatMap((show) => {
-    const candidate = publicUrl(show && show.detailUrl, APPROVED_HOSTS[context.region]);
-    if (!candidate) return [];
-    const parsed = new URL(candidate);
-    if (!parsed.pathname.toLowerCase().startsWith("/musical/")) return [];
-    if (seen.has(candidate)) return [];
-    seen.add(candidate);
-    return [candidate];
-  }).slice(0, CATALOG_LIMIT);
-  if (!urls.length) return { listings: [], failures: 0 };
-
-  const listings = [];
-  async function checkPages(pageUrls, concurrency) {
-    const failedUrls = [];
-    for (let offset = 0; offset < pageUrls.length; offset += concurrency) {
-      const batch = pageUrls.slice(offset, offset + concurrency);
-      const results = await Promise.allSettled(batch.map((url) => scrapeListingPage(context, {
-        ...context.source,
-        url,
-        sourceIsDetail: true,
-        strategy: undefined,
-      })));
-      for (let index = 0; index < results.length; index += 1) {
-        const result = results[index];
-        if (result.status === "fulfilled") listings.push(...result.value);
-        else failedUrls.push(batch[index]);
-      }
-    }
-    return failedUrls;
+function sourceUrl(value, baseUrl, allowedHosts) {
+  try {
+    return publicUrl(new URL(text(value, 1600), baseUrl).toString(), allowedHosts);
+  } catch {
+    return "";
   }
-  const failedUrls = await checkPages(urls, DETAIL_CONCURRENCY);
-  const retryFailures = failedUrls.length ? await checkPages(failedUrls, RETRY_CONCURRENCY) : [];
-  return { listings, failures: retryFailures.length };
+}
+
+async function loadLondonListings(context) {
+  let response;
+  try {
+    response = await fetch(LONDON_EVENTS_URL, {
+      method: "POST",
+      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify({
+        eventTypes: [1],
+        performanceDates: { from: context.date, to: context.date },
+        eventStart: null,
+        eveningOnly: null,
+        matineeOnly: null,
+        priceFrom: null,
+        priceTo: null,
+        collections: [],
+        customerRating: null,
+        keyword: "",
+        sorting: 0,
+        availableSortings: [0, 1, 2, 3],
+        resultsLimit: RESULT_LIMIT,
+        eventName: "",
+        offersOnly: null,
+        filterByCategories: false,
+      }),
+      signal: AbortSignal.timeout(20000),
+    });
+  } catch {
+    throw new PublicError(502, "source_unreachable", "The live source did not respond. Please try again.");
+  }
+  if (!response.ok) throw new PublicError(502, "source_rejected", "The live source could not be read. Please try again later.");
+  let payload;
+  try {
+    payload = await response.json();
+  } catch {
+    throw new PublicError(502, "source_invalid_response", "The live source returned an unreadable response.");
+  }
+  if (!Array.isArray(payload)) throw new PublicError(502, "source_missing_data", "The live source did not return usable information.");
+  const performances = payload.slice(0, RESULT_LIMIT).map((item) => {
+    const price = item && item.promoInfo;
+    const amount = Number(price && price.priceFrom);
+    const hasPrice = Number.isFinite(amount) && amount >= 0;
+    const detailUrl = sourceUrl(item && item.detailLink && item.detailLink.url, context.source.url, APPROVED_HOSTS[context.region]);
+    const bookingUrl = sourceUrl(item && item.bookTicketsLink && item.bookTicketsLink.url, context.source.url, APPROVED_HOSTS[context.region]);
+    return {
+      explicitSelectedDate: true,
+      title: text(item && item.title, 160),
+      theatre: text(item && item.additionalInfo && item.additionalInfo.venueName, 160),
+      city: text(item && item.additionalInfo && item.additionalInfo.venueAddress && item.additionalInfo.venueAddress.city, 100),
+      performanceDate: context.date,
+      performanceTimes: [],
+      lowestPriceAmount: hasPrice ? amount : null,
+      lowestPriceDisplay: hasPrice ? `${text(price.priceFromPrefix, 24) || "From"} £${amount}` : "",
+      ticketStatus: bookingUrl ? "on-sale" : "unknown",
+      detailUrl,
+      bookingUrl,
+    };
+  });
+  return normalizeListings({ performances }, context, new Date().toISOString());
 }
 
 async function loadListings(context) {
   const fetchedAt = new Date().toISOString();
   let listings;
-  let failures = 0;
-  if (context.source.strategy === "catalogue-detail") {
-    const result = await loadCatalogueDetails(context);
-    listings = result.listings;
-    failures = result.failures;
+  if (context.source.strategy === "public-date-filter") {
+    listings = await loadLondonListings(context);
   } else {
     listings = await scrapeListingPage(context, context.source);
   }
@@ -356,7 +356,6 @@ async function loadListings(context) {
     return true;
   }).sort((left, right) => (left.performanceTimes[0] || "99:99").localeCompare(right.performanceTimes[0] || "99:99") || left.title.localeCompare(right.title)).slice(0, RESULT_LIMIT);
   const warnings = [context.source.coverage];
-  if (failures) warnings.push(`${failures} catalogue show page${failures === 1 ? "" : "s"} could not be checked; other verified results are shown.`);
   return {
     region: context.region,
     selectedDate: context.date,

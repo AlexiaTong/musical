@@ -90,32 +90,19 @@ test("successful listings are normalized and receive shared cache headers", asyn
   }
 });
 
-test("West End catalogue expands approved musical pages and tolerates a partial failure", async () => {
+test("West End uses the source's public date filter and preserves unavailable times", async () => {
   const originalFetch = global.fetch;
-  const requestedUrls = [];
-  global.fetch = async (_url, options) => {
-    const requested = JSON.parse(options.body).url;
-    requestedUrls.push(requested);
-    if (requested === "https://www.londontheatredirect.com/") {
-      return { ok: true, async json() { return { success: true, data: { metadata: { url: requested }, json: { shows: [
-        { title: "Hamilton", detailUrl: "https://www.londontheatredirect.com/musical/hamilton-tickets" },
-        { title: "Wicked", detailUrl: "https://www.londontheatredirect.com/musical/wicked-tickets" },
-      ] } } }; } };
-    }
-    if (requested.includes("wicked")) throw new Error("temporary upstream failure");
-    return { ok: true, async json() { return { success: true, data: { metadata: { url: requested }, json: { performances: [{
-      explicitSelectedDate: true,
+  let requestBody;
+  global.fetch = async (url, options) => {
+    assert.equal(url, "https://www.londontheatredirect.com/api/events");
+    requestBody = JSON.parse(options.body);
+    return { ok: true, async json() { return [{
       title: "Hamilton",
-      theatre: "Victoria Palace Theatre",
-      city: "London",
-      performanceDate: beijingDay(),
-      performanceTimes: ["19:30"],
-      lowestPriceAmount: 45,
-      lowestPriceDisplay: "from £45",
-      ticketStatus: "on-sale",
-      detailUrl: requested,
-      bookingUrl: `${requested}/booking`,
-    }] } } }; } };
+      additionalInfo: { venueName: "Victoria Palace Theatre", venueAddress: { city: "London" } },
+      promoInfo: { priceFrom: 45, currency: "GBP", priceFromPrefix: "From" },
+      detailLink: { url: "/musical/hamilton-tickets" },
+      bookTicketsLink: { url: "/booking/hamilton-tickets/09-2026" },
+    }]; } };
   };
   try {
     const response = responseRecorder();
@@ -124,8 +111,9 @@ test("West End catalogue expands approved musical pages and tolerates a partial 
     assert.equal(response.body.listings.length, 1);
     assert.equal(response.body.listings[0].title, "Hamilton");
     assert.equal(response.body.listings[0].lowestPrice.currency, "GBP");
-    assert.equal(requestedUrls.length, 4);
-    assert.match(response.body.warnings[1], /1 catalogue show page/);
+    assert.deepEqual(response.body.listings[0].performanceTimes, []);
+    assert.deepEqual(response.body.listings[0].missingFields, ["performanceTimes"]);
+    assert.deepEqual(requestBody.performanceDates, { from: beijingDay(), to: beijingDay() });
   } finally {
     global.fetch = originalFetch;
   }

@@ -2,7 +2,7 @@
 
 Musicals This Week helps audiences compare verified performances across Broadway, the West End, and Germany for the coming seven Beijing-calendar days. The current code is **Phase 2**: the accepted interface now reads normalized live information through bounded Vercel routes while preserving the Phase 0/1 contracts.
 
-It includes region/date selection, location and budget filters, missing-value states, an in-memory three-card comparison, and one shared deep-read panel. Live retrieval uses bounded Firecrawl Scrape requests against approved public catalogue and show pages. It deliberately excludes live seat inventory, purchasing, maps, accounts, saved comparisons, currency conversion, notifications, unrestricted crawl, and arbitrary URLs.
+It includes region/date selection, location and budget filters, missing-value states, an in-memory three-card comparison, and one shared deep-read panel. Live retrieval uses bounded Firecrawl Scrape requests and London Theatre Direct's fixed public catalogue date filter against approved sources. It deliberately excludes live seat inventory, purchasing, maps, accounts, saved comparisons, currency conversion, notifications, unrestricted crawl, and arbitrary URLs.
 
 ## Run locally
 
