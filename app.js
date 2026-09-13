@@ -81,20 +81,19 @@ async function loadContext({ resetContext = false } = {}) {
 
 async function loadFoundation(params = {}) {
   setBusy(true);
-  setStatus("Refreshing live performances…");
+  setStatus("Loading the regression sample…");
   clearResults();
   try {
     const result = await source.load(params);
     if (result.listings.length === 0) {
-      showEmpty("The live request succeeded, but it returned no verified performances.");
+      showEmpty("The regression sample request succeeded, but it returned no items.");
       setStatus("Empty state displayed.");
       return;
     }
     renderList(result.listings);
-    state.fetchedAt = result.fetchedAt;
-    setStatus(`${result.listings.length} verified performances loaded. Last refreshed ${new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short" }).format(new Date(result.fetchedAt))}.`);
+    setStatus(`${result.listings.length} regression sample items loaded from the local fixture.`);
   } catch (error) {
-    showError(error instanceof Error ? error.message : "Something went wrong while loading live performances.");
+    showError(error instanceof Error ? error.message : "Something went wrong while loading the regression sample.");
     setStatus("The request ended with a readable error.");
   } finally {
     setBusy(false);

@@ -88,3 +88,34 @@ test("successful listings are normalized and receive shared cache headers", asyn
   }
 });
 
+test("detail extraction rejects an upstream redirect outside the region allowlist", async () => {
+  const originalFetch = global.fetch;
+  global.fetch = async () => ({
+    ok: true,
+    async json() {
+      return {
+        success: true,
+        data: {
+          metadata: { url: "https://unapproved.example/redirected" },
+          json: {
+            title: "Wicked",
+            theatre: "Gershwin Theatre",
+            city: "New York",
+            performanceFacts: [],
+            ticketFacts: [],
+            excerpt: "",
+            bookingUrl: "",
+          },
+        },
+      };
+    },
+  });
+  try {
+    const response = responseRecorder();
+    await showDetail({ method: "POST", body: { region: "broadway", detailUrl: "https://www.broadway.com/shows/wicked/" } }, response);
+    assert.equal(response.statusCode, 502);
+    assert.equal(response.body.error.code, "source_redirect_rejected");
+  } finally {
+    global.fetch = originalFetch;
+  }
+});

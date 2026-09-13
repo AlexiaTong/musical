@@ -1,4 +1,6 @@
 export const config = Object.freeze({
+  sampleDataPath: "./data/sample.json",
+  sampleDelayMs: 350,
   resultLimit: 24,
   compareLimit: 3,
   detailExcerptLimit: 320,

@@ -43,7 +43,7 @@ The public path is GitHub to Vercel. The repository root serves the static brows
 - `source.js` is the only browser-side data-entry seam.
 - `config.js` contains safe browser settings.
 - `finder.js` contains pure date, filter, location, and comparison helpers.
-- `data/sample.json` remains as the accepted historical Phase 0/1 fixture but is not read by the Phase 2 runtime.
+- `data/sample.json` remains available only to the collapsed Phase 0 regression controls; the primary Phase 2 journey uses live routes.
 - `api/shows.js` validates the Beijing seven-day listing request and returns normalized live cards.
 - `api/show-detail.js` validates one approved detail URL and returns one bounded normalized detail.
 - `api/_lib/live.js` owns server-only source selection, host allowlists, Firecrawl Scrape, validation, normalization, and readable errors.
