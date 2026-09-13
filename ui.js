@@ -100,7 +100,7 @@ export function renderList(items) {
     ];
     rows.forEach(([label, value]) => { facts.append(text("dt", label), text("dd", value)); });
     card.append(venue, facts);
-    if (item.missingFields.length) card.append(text("p", `Missing from sample: ${missingLabels(item)}.`, "missing-note"));
+    if (item.missingFields.length) card.append(text("p", `Not provided by source: ${missingLabels(item)}.`, "missing-note"));
     card.append(text("p", item.sourceName, "source-note"));
     const actions = document.createElement("div");
     actions.className = "card-actions";
@@ -115,7 +115,7 @@ export function renderList(items) {
     detail.className = "quiet";
     detail.textContent = "View details";
     actions.append(compare, detail);
-    if (item.bookingUrl) actions.append(safeLink("Open sample link ↗", item.bookingUrl));
+    if (item.bookingUrl) actions.append(safeLink("Check tickets ↗", item.bookingUrl));
     card.append(actions);
     elements.results.append(card);
   });
@@ -150,7 +150,7 @@ export function renderDetail(viewModel) {
   elements.detailPanel.hidden = false;
   elements.detailContent.replaceChildren();
   if (viewModel.state === "loading") {
-    elements.detailContent.append(text("p", `Loading the fictional detail for ${viewModel.title}…`, "detail-state"));
+    elements.detailContent.append(text("p", `Loading details for ${viewModel.title}…`, "detail-state"));
     return;
   }
   if (viewModel.state === "error") {
@@ -170,7 +170,7 @@ export function renderDetail(viewModel) {
     columns.append(section);
   });
   elements.detailContent.append(columns, text("p", `Source: ${detail.sourceName}`, "source-note"));
-  if (detail.bookingUrl) elements.detailContent.append(safeLink("Open sample booking page ↗", detail.bookingUrl));
+  if (detail.bookingUrl) elements.detailContent.append(safeLink("Check current tickets ↗", detail.bookingUrl));
 }
 
 export function clearDetail() { elements.detailPanel.hidden = true; elements.detailContent.replaceChildren(); }

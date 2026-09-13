@@ -15,7 +15,8 @@ const state = {
   locations: [],
   location: "",
   budget: "",
-  compared: []
+  compared: [],
+  fetchedAt: ""
 };
 
 function controlsViewModel() {
@@ -39,15 +40,18 @@ function renderCurrentListings() {
 
   if (filtered.listings.length === 0) {
     const message = state.listings.length === 0
-      ? "No fictional sample performances are scheduled for this date. Try another day."
-      : "No performances match these filters. Clear a filter to see the loaded sample again.";
+      ? "No verified performances were found for this date. Try another day."
+      : "No performances match these filters. Clear a filter to see the live results again.";
     showEmpty(message);
   }
 
   const unknownNote = filtered.unknownPriceExcluded > 0
     ? ` ${filtered.unknownPriceExcluded} ${filtered.unknownPriceExcluded === 1 ? "listing was" : "listings were"} excluded because the price is unknown.`
     : "";
-  setStatus(`${filtered.listings.length} of ${state.listings.length} fictional performances shown.${unknownNote}`);
+  const refreshed = state.fetchedAt
+    ? ` Last refreshed ${new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short" }).format(new Date(state.fetchedAt))}.`
+    : "";
+  setStatus(`${filtered.listings.length} of ${state.listings.length} verified performances shown.${unknownNote}${refreshed}`);
 }
 
 async function loadContext({ resetContext = false } = {}) {
@@ -60,14 +64,15 @@ async function loadContext({ resetContext = false } = {}) {
     clearDetail();
     renderComparison([]);
   }
-  setStatus("Loading fictional local performances…");
+  setStatus("Loading verified performances…");
   try {
     const result = await source.load({ region: state.region, date: state.selectedDate });
     state.listings = result.listings;
+    state.fetchedAt = result.fetchedAt;
     state.locations = deriveLocations(result.listings);
     renderCurrentListings();
   } catch (error) {
-    showError(error instanceof Error ? error.message : "The sample performances could not be loaded.");
+    showError(error instanceof Error ? error.message : "The live performances could not be loaded.");
     setStatus("The request ended with a readable error.");
   } finally {
     setBusy(false);
@@ -76,19 +81,20 @@ async function loadContext({ resetContext = false } = {}) {
 
 async function loadFoundation(params = {}) {
   setBusy(true);
-  setStatus("Loading the local sample…");
+  setStatus("Refreshing live performances…");
   clearResults();
   try {
     const result = await source.load(params);
     if (result.listings.length === 0) {
-      showEmpty("The sample request succeeded, but it returned no items.");
+      showEmpty("The live request succeeded, but it returned no verified performances.");
       setStatus("Empty state displayed.");
       return;
     }
     renderList(result.listings);
-    setStatus(`${result.listings.length} sample items loaded from the local file.`);
+    state.fetchedAt = result.fetchedAt;
+    setStatus(`${result.listings.length} verified performances loaded. Last refreshed ${new Intl.DateTimeFormat("en", { dateStyle: "medium", timeStyle: "short" }).format(new Date(result.fetchedAt))}.`);
   } catch (error) {
-    showError(error instanceof Error ? error.message : "Something went wrong while loading the sample.");
+    showError(error instanceof Error ? error.message : "Something went wrong while loading live performances.");
     setStatus("The request ended with a readable error.");
   } finally {
     setBusy(false);
@@ -133,7 +139,7 @@ bindHandlers({
     try {
       renderDetail({ state: "result", detail: await source.detail(id) });
     } catch (error) {
-      renderDetail({ state: "error", message: error instanceof Error ? error.message : "This sample detail is unavailable." });
+      renderDetail({ state: "error", message: error instanceof Error ? error.message : "This live detail is unavailable." });
     }
   },
   closeDetail: clearDetail

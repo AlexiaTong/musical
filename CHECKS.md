@@ -28,6 +28,28 @@ Run every numbered check before a checkpoint. Record each as pass, fail, or bloc
 24. **Missing fields:** confirm missing time, price, status, or booking values use readable unavailable labels and are never inferred.
 25. **Responsive and keyboard:** confirm the product remains usable without horizontal scrolling at 375px and all controls have visible keyboard focus.
 
+## Phase 2 Regression Checks
+
+26. **Earlier checks:** confirm the permanent Phase 0/1 contracts and applicable interaction checks still pass.
+27. **Feasibility report:** confirm all six approved sources and their date-evidence results are recorded.
+28. **Normalized regions:** confirm all three live regions return the permanent listing response and item keys.
+29. **Input validation:** reject invalid region, date, and `refreshDay` with readable JSON errors.
+30. **Selected-date evidence:** discard every extracted item not explicitly tied to the requested date.
+31. **Local facts:** preserve source performance times and USD/GBP/EUR values without conversion.
+32. **Missing values:** return every key and list unavailable optional fields in `missingFields` without guessing.
+33. **Live filters:** confirm date, location, and numeric budget filters operate on normalized live results.
+34. **Live comparison:** confirm up to three live cards compare and a fourth is rejected readably.
+35. **Bounded detail:** confirm one displayed item retrieves exactly one allowlisted page into the shared detail panel.
+36. **Detail URL security:** reject malformed, credential-bearing, cross-region, localhost, private/internal, and unapproved detail URLs and unapproved redirects.
+37. **Failure isolation:** confirm listing and deep-read failures remain readable and do not destroy accepted controls.
+38. **Beijing rollover:** confirm a new Beijing `refreshDay` produces a new listing URL/cache key.
+39. **Shared cache:** confirm only successful listing GETs receive the intentional shared 15-minute cache and six-hour stale window.
+40. **Secret isolation:** confirm `FIRECRAWL_API_KEY` appears only as a server-side environment-variable name and no credential appears in Git, browser files, logs, or responses.
+41. **Response isolation:** confirm no raw Firecrawl body or stack trace reaches the browser.
+42. **Scope exclusions:** confirm there is no live seat query, purchase, map, account, crawl, ticket API, or arbitrary scrape URL.
+43. **Production usability:** confirm syntax/tests, keyboard focus, and the 375px layout remain healthy.
+44. **Public definition of done:** confirm the public Vercel root, three listing journeys, one detail journey, and readable error paths work.
+
 ## Latest run
 
 Run on 2026-09-13 against `http://127.0.0.1:4173`:

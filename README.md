@@ -1,8 +1,8 @@
 # Musicals This Week
 
-Musicals This Week helps audiences compare fictional sample performances across Broadway, the West End, and Germany for the coming seven Beijing-calendar days. The current code is **Phase 1**: the complete product interaction runs on local fictional data while preserving the Phase 0 architecture and regression controls.
+Musicals This Week helps audiences compare verified performances across Broadway, the West End, and Germany for the coming seven Beijing-calendar days. The current code is **Phase 2**: the accepted interface now reads normalized live information through bounded Vercel routes while preserving the Phase 0/1 contracts.
 
-It includes region/date selection, location and budget filters, missing-value states, an in-memory three-card comparison, and one shared sample detail panel. It deliberately does not include live retrieval, Firecrawl, a backend, ticket inventory, purchasing, maps, accounts, saved comparisons, currency conversion, or notifications.
+It includes region/date selection, location and budget filters, missing-value states, an in-memory three-card comparison, and one shared deep-read panel. Live retrieval uses Firecrawl Scrape against one prepared public page per request. It deliberately excludes live seat inventory, purchasing, maps, accounts, saved comparisons, currency conversion, notifications, unrestricted crawl, and arbitrary URLs.
 
 ## Run locally
 
@@ -14,11 +14,11 @@ python -m http.server 4173
 
 Then visit `http://localhost:4173`.
 
-No dependency installation or environment file is required in Phase 1.
+No dependency installation is required. `FIRECRAWL_API_KEY` is configured only in the Vercel project environment; this project does not require a local environment file.
 
 ## Deploy
 
-The intended public path is GitHub to Vercel as a plain static site. Connect the selected GitHub repository to a Vercel project and deploy the repository root without a build command. Deployment is performed only when explicitly authorized for the selected accounts and projects.
+The public path is GitHub to Vercel. The repository root serves the static browser interface and the `api/` directory provides the two Node.js-compatible serverless routes.
 
 ## Permanent working rules
 
@@ -43,6 +43,9 @@ The intended public path is GitHub to Vercel as a plain static site. Connect the
 - `source.js` is the only browser-side data-entry seam.
 - `config.js` contains safe browser settings.
 - `finder.js` contains pure date, filter, location, and comparison helpers.
-- `data/sample.json` is the fictional local fixture used in Phases 0 and 1.
+- `data/sample.json` remains as the accepted historical Phase 0/1 fixture but is not read by the Phase 2 runtime.
+- `api/shows.js` validates the Beijing seven-day listing request and returns normalized live cards.
+- `api/show-detail.js` validates one approved detail URL and returns one bounded normalized detail.
+- `api/_lib/live.js` owns server-only source selection, host allowlists, Firecrawl Scrape, validation, normalization, and readable errors.
 
-Phase 2 will change the inside of `source.js` to use approved same-origin server routes while its public method names remain stable.
+The public `source` method names and UI functions remain stable across all phases.

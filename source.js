@@ -1,65 +1,49 @@
 import { config } from "./config.js";
-import { addDays, dayDifference, getCalendarDay } from "./finder.js";
+import { getCalendarDay } from "./finder.js";
 
-let sampleCache = null;
 let loadedItems = new Map();
 
-function pause(milliseconds) {
-  return new Promise((resolve) => window.setTimeout(resolve, milliseconds));
-}
-
-async function readSample() {
-  if (sampleCache) return sampleCache;
-  const response = await fetch(config.sampleDataPath, { cache: "no-store" });
-  if (!response.ok) throw new Error("The local sample data could not be loaded.");
-  sampleCache = await response.json();
-  return sampleCache;
-}
-
-function moveListingToCurrentWindow(item, fixtureDay, currentDay) {
-  const offset = dayDifference(fixtureDay, item.performanceDate);
-  return { ...item, performanceDate: addDays(currentDay, offset) };
+async function requestJson(url, options = {}) {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), config.requestTimeoutMs);
+  try {
+    const response = await fetch(url, { ...options, signal: controller.signal });
+    const payload = await response.json().catch(() => null);
+    if (!response.ok) {
+      const message = payload?.error?.message || "The live source request could not be completed.";
+      throw new Error(message);
+    }
+    return payload;
+  } catch (error) {
+    if (error?.name === "AbortError") throw new Error("The live source took too long to respond. Please try again.");
+    throw error;
+  } finally {
+    window.clearTimeout(timer);
+  }
 }
 
 export const source = Object.freeze({
   async load(params = {}) {
-    await pause(config.sampleDelayMs);
     if (params.forceError) throw new Error("This controlled error proves the recovery state is readable.");
-    const data = await readSample();
-    if (!params.region || !params.date) {
-      return params.forceEmpty ? { ...data.foundation, listings: [] } : data.foundation;
-    }
-
     const currentDay = getCalendarDay(config.timeZone);
-    const listings = data.listings
-      .map((item) => moveListingToCurrentWindow(item, data.sampleBaseDate, currentDay))
-      .filter((item) => item.region === params.region && item.performanceDate === params.date)
-      .slice(0, config.resultLimit);
+    const region = params.region || "broadway";
+    const date = params.date || currentDay;
+    const query = new URLSearchParams({ region, date, refreshDay: currentDay });
+    const result = await requestJson(`/api/shows?${query.toString()}`, { headers: { Accept: "application/json" } });
+    const listings = Array.isArray(result.listings) ? result.listings.slice(0, config.resultLimit) : [];
     loadedItems = new Map(listings.map((item) => [item.id, item]));
-    return {
-      region: params.region,
-      selectedDate: params.date,
-      dataDay: currentDay,
-      fetchedAt: data.fetchedAt,
-      source: data.sources[params.region],
-      listings: params.forceEmpty ? [] : listings,
-      warnings: ["Fictional local data for interaction testing only."]
-    };
+    return params.forceEmpty ? { ...result, listings: [] } : { ...result, listings };
   },
 
   async detail(id) {
-    await pause(config.sampleDelayMs);
-    const data = await readSample();
-    const loadedItem = loadedItems.get(id);
-    const detail = [...data.details, ...data.foundation.details].find((item) => item.id === id);
-    if (!detail || (!loadedItem && !id.startsWith("foundation-"))) throw new Error("No sample detail was found for that item.");
-    const { id: privateId, ...normalizedDetail } = detail;
-    return {
-      ...normalizedDetail,
-      excerpt: normalizedDetail.excerpt.slice(0, config.detailExcerptLimit),
-      theatre: loadedItem?.theatre || normalizedDetail.theatre,
-      city: loadedItem?.city || normalizedDetail.city
-    };
+    const item = loadedItems.get(id);
+    if (!item || !item.detailUrl) throw new Error("A verified detail page is unavailable for this performance.");
+    const detail = await requestJson("/api/show-detail", {
+      method: "POST",
+      headers: { Accept: "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify({ region: item.region, detailUrl: item.detailUrl })
+    });
+    return { ...detail, excerpt: String(detail.excerpt || "").slice(0, config.detailExcerptLimit) };
   },
 
   async save() { throw new Error("source.save() is not used in this project."); },

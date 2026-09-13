@@ -29,6 +29,8 @@ sourceName, sourceUrl, bookingUrl, retrievedAt, missingFields
 
 The Phase 0 local fixture also includes a private `id` solely so `source.detail(id)` can locate the record. The normalized value returned by `source.detail(id)` omits no documented detail key; Phase 1 will remove that private lookup field before rendering.
 
+In Phase 2, the public detail action remains ID-based. `source.js` resolves that ID only from the most recently loaded in-memory set, then sends its region and approved detail URL to the same-origin detail route. The product exposes no arbitrary URL input.
+
 ## Required DOM IDs
 
 Universal Phase 0 IDs are `app-shell`, `page-title`, `demo-title`, `working-indicator`, `main-action`, `empty-action`, `error-action`, `clear-action`, `status-message`, `error-message`, `empty-message`, `results-section`, `results-title`, and `results-list`.
@@ -75,6 +77,10 @@ source.list()
 ## Phase 1 pure helper
 
 `finder.js` contains only deterministic calendar, filtering, location, and comparison helpers. It has no DOM or data access. The sample fixture is anchored to `sampleBaseDate`; `source.js` shifts its dates into the current seven-day `Asia/Shanghai` window before returning the unchanged normalized listing shape.
+
+## Phase 2 server seam
+
+`source.load(params)` calls the same-origin `/api/shows` route with region, selected date, and the current Beijing `refreshDay`. `source.detail(id)` calls `/api/show-detail` only after resolving a displayed item. Server-only source configuration, Firecrawl access, normalization, URL validation, and response caching live under `api/`; browser contracts and normalized keys remain unchanged.
 
 ## Supported values
 

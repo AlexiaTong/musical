@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Compare fictional sample musical performances across Broadway, the West End, and Germany.">
+  <meta name="description" content="Compare verified musical performances across Broadway, the West End, and Germany for the next seven days.">
   <title>Musicals This Week</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%237b1f2b'/%3E%3Cpath d='M13 15h38v34H13z' fill='%23fff6df' stroke='%23d7ae5d' stroke-width='3'/%3E%3Cpath d='M22 40V24l10 10 10-10v16' fill='none' stroke='%237b1f2b' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="style.css">
@@ -15,7 +15,7 @@
       <div class="masthead-copy">
         <p class="lede">Seven days of Broadway, West End, and German musical performances</p>
         <p class="disclaimer">Prices and availability can change. Confirm current details on the linked ticket page.</p>
-        <p class="sample-notice">Phase 1 uses fictional local sample data. No live ticket information is shown.</p>
+        <p class="sample-notice">Live information comes from approved public ticket pages. Coverage is intentionally limited to performances each source explicitly verifies.</p>
       </div>
     </header>
     <section class="finder-panel" aria-labelledby="demo-title">
@@ -37,7 +37,7 @@
     </section>
     <div class="content-grid">
       <section id="results-section" class="results panel" aria-labelledby="results-title">
-        <div class="results-heading"><div><p class="section-label">Today's options</p><h2 id="results-title">Sample performances</h2></div><span class="phase-tag">Fictional data</span></div>
+        <div class="results-heading"><div><p class="section-label">Today's options</p><h2 id="results-title">Verified performances</h2></div><span class="phase-tag">Live sources</span></div>
         <div id="results-list" class="result-list"></div>
       </section>
       <aside class="compare-panel panel" aria-labelledby="comparison-title">
@@ -54,7 +54,7 @@
       <summary>Phase 0 regression states</summary>
       <p class="instruction">These controls preserve the accepted loading, empty, error, result, status, and clear checks.</p>
       <div class="actions" aria-label="Foundation test actions">
-        <button id="main-action" data-action type="button">Load sample</button>
+        <button id="main-action" data-action type="button">Reload live data</button>
         <button id="empty-action" data-action class="secondary" type="button">Show empty state</button>
         <button id="error-action" data-action class="secondary" type="button">Show error state</button>
         <button id="clear-action" data-action class="quiet" type="button">Clear results</button>

@@ -426,6 +426,9 @@ Keep the allowlist server-side:
 - `broadwaydirect.com` and `www.broadwaydirect.com`
 - `officiallondontheatre.com` and `www.officiallondontheatre.com`
 - `stage-entertainment.de` and `www.stage-entertainment.de`
+- `broadway.com` and `www.broadway.com`
+- `londontheatredirect.com` and `www.londontheatredirect.com`
+- `musical1.de` and `www.musical1.de`
 
 Booking URLs may lead to an approved external seller, but that does not make the seller eligible for deep-read scraping.
 

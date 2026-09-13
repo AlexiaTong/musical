@@ -49,13 +49,16 @@ The first build is desktop-first. It must remain usable at a basic narrow width,
 
 ## 4. Prepared Public Sources
 
-Use three prepared public source families, which remains within the approved MVP limit of two to three sources:
+Use the six user-approved public source families below. Phase 2 listing retrieval uses the first date-feasible source for each region; approved alternatives remain documented rather than being treated as implicit fallback data.
 
 | Region | Prepared source | Starting page | MVP coverage meaning |
 |---|---|---|---|
-| Broadway | Broadway Direct | `https://broadwaydirect.com/shows/` | Musicals and performance information that Broadway Direct explicitly exposes. |
-| West End | Official London Theatre | `https://officiallondontheatre.com/london-musicals/` | London/West End musicals and performance information explicitly exposed by the source. |
-| Germany | Stage Entertainment Germany | `https://www.stage-entertainment.de/` | Major Stage Entertainment productions; not every independent or touring German musical. |
+| Broadway | Broadway Direct | `https://broadwaydirect.com/shows/` | Approved, but its prepared listing page did not expose selected-date times in the Phase 2 gate. |
+| Broadway | Broadway.com | `https://www.broadway.com/shows/wicked/` | Date-feasible prepared Broadway schedule used by the live adapter. |
+| West End | Official London Theatre | `https://officiallondontheatre.com/london-musicals/` | Approved, but its prepared listing page did not expose selected-date times in the Phase 2 gate. |
+| West End | London Theatre Direct | `https://www.londontheatredirect.com/musical/hadestown-tickets` | Date-feasible prepared West End schedule used by the live adapter. |
+| Germany | Stage Entertainment Germany | `https://www.stage-entertainment.de/` | Approved, but its prepared landing page did not expose selected-date times in the Phase 2 gate. |
+| Germany | Musical1 | `https://www.musical1.de/musicals/hamburg/` | Date-feasible prepared Hamburg listing used by the live adapter. |
 
 “All relevant musicals” means all performances that these prepared source adapters can reliably verify for the selected region and date. The site must not claim exhaustive market coverage.
 
@@ -446,4 +449,3 @@ Another student can open the public URL without coaching and:
 10. recover from empty or failed results;
 11. explain that the site retrieves prepared public information but does not crawl freely, show live seats, or sell tickets;
 12. explain the architecture: UI -> `source.js` -> Vercel route -> Firecrawl/prepared source -> normalized JSON -> `ui.js`.
-
