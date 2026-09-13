@@ -287,7 +287,7 @@ function normalizeListings(raw, context, retrievedAt) {
 }
 
 function listingPrompt(context) {
-  return `Extract only musical-theatre performances that this public source explicitly supports for ${context.date} in ${context.region}. Exclude plays, concerts, opera, archived productions, navigation, editorial articles, and promotional blocks. Set explicitSelectedDate true only with visible evidence for that exact date. Return exact visible title, theatre, city, date as YYYY-MM-DD, all local performance times, lowest advertised price amount and display with source currency, explicit ticket-sale status mapped to on-sale, coming-soon, sold-out, closed, or unknown, an approved same-source detail URL, and the direct booking URL when present. Use empty values or null for unavailable fields. Do not infer, translate, convert currency, or invent facts. Return at most ${RESULT_LIMIT} items.`;
+  return `Extract only musical-theatre performances that this prepared public source explicitly supports for ${context.date} in ${context.region}. Exclude plays, concerts, opera, archived productions, navigation, editorial articles, and promotional blocks. Set explicitSelectedDate true only with visible evidence for that exact date. Return exact visible title, theatre, city, date as YYYY-MM-DD, all local performance times, lowest advertised price amount and display with source currency, explicit ticket-sale status mapped to on-sale, coming-soon, sold-out, closed, or unknown, an approved same-source detail URL, and the direct booking URL when present. Use empty values or null for unavailable fields. Do not infer, translate, convert currency, or invent facts. Return at most ${RESULT_LIMIT} items.`;
 }
 
 async function scrapeListingPage(context, source) {
